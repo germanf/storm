@@ -99,7 +99,7 @@ if (!isDebug) {
       // Developer Shortcuts
       win.window.document.addEventListener('keydown', function(event){
           // F12 Opens DevTools
-          if( event.keyCode == 123 ) { win.showDevTools(); }
+          if( event.keyCode == 121 ) { win.showDevTools(); }
           // F11 Reloads
           if( event.keyCode == 122 ) { win.reloadIgnoringCache(); }
       });
@@ -507,7 +507,7 @@ var Storm = function() {
 		t.loader();
 
 		t.lastRequest = url;
-
+		console.log(url);
 		request({
 			url: url,
 			method: 'GET',
