@@ -1,4 +1,6 @@
-# Cuevana Storm
+# Cuevana Share
+
+Cuevana app to watch movies with friends!
 
 Cuevana Storm desktop app based in peerflix module, packaged with node-webkit
 
