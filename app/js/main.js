@@ -20,43 +20,44 @@ var version = '0.1b';
 // Platform 
 var isWin = /^win/.test(process.platform);
 var isMac = /^darwin/.test(process.platform);
+var isLinux = (!isWin && !isMac);
 var isMaximized = false;
 
 // App extra variables
 var videoData = {};
 var languages = {
-	'ES': 'Español',
-	'EN': 'Inglés',
-	'PT': 'Portugués'
+	'ES': i18n.__('SPANISH'),
+	'EN': i18n.__('ENGLISH'),
+	'PT': i18n.__('PORTUGUESE')
 }
 var genres = [
-	{ key: '1', name: 'Drama'},
-	{ key: '2', name: 'Comedia'},
-	{ key: '3', name: 'Suspenso'},
-	{ key: '4', name: 'Terror'},
-	{ key: '5', name: 'Acción'},
-	{ key: '6', name: 'Ciencia Ficción'},
-	{ key: '7', name: 'Animación'},
-	{ key: '8', name: 'Infantil'},
-	{ key: '9', name: 'Romance'},
-	{ key: '10', name: 'Documental'},
-	{ key: '11', name: 'Musical'},
-	{ key: '12', name: 'Humor'},
-	{ key: '13', name: 'Fantástico'},
-	{ key: '14', name: 'Aventura'},
-	{ key: '15', name: 'Comedia Musical'},
-	{ key: '16', name: 'Comedia Romántica'},
-	{ key: '18', name: 'Crimen'},
-	{ key: '19', name: 'Bélica'},
-	{ key: '20', name: 'Deporte'},
-	{ key: '21', name: 'Western'},
-	{ key: '22', name: 'Dogma'},
-	{ key: '23', name: 'Cine Negro'},
-	{ key: '24', name: 'Comedia Stand-up'},
-	{ key: '25', name: 'Intriga'},
-	{ key: '26', name: 'Comedia Negra'},
-	{ key: '27', name: 'Comedia Dramática'},
-	{ key: '28', name: 'Cortometraje'}
+	{ key: '1', name: i18n.__('GENRE_DRAMA')},
+	{ key: '2', name: i18n.__('GENRE_COMEDY')},
+	{ key: '3', name: i18n.__('GENRE_THRILLER')},
+	{ key: '4', name: i18n.__('GENRE_HORROR')},
+	{ key: '5', name: i18n.__('GENRE_ACTION')},
+	{ key: '6', name: i18n.__('GENRE_SCIFI')},
+	{ key: '7', name: i18n.__('GENRE_ANIMATION')},
+	{ key: '8', name: i18n.__('GENRE_FAMILY')},
+	{ key: '9', name: i18n.__('GENRE_ROMANCE')},
+	{ key: '10', name: i18n.__('GENRE_DOCUMENTARY')},
+	{ key: '11', name: i18n.__('GENRE_MUSICAL')},
+	{ key: '12', name: i18n.__('GENRE_HUMOUR')},
+	{ key: '13', name: i18n.__('GENRE_FANTASY')},
+	{ key: '14', name: i18n.__('GENRE_ADVENTURE')},
+	{ key: '15', name: i18n.__('GENRE_MUSICALCOMEDY')},
+	{ key: '16', name: i18n.__('GENRE_ROMANTICCOMEDY')},
+	{ key: '18', name: i18n.__('GENRE_CRIME')},
+	{ key: '19', name: i18n.__('GENRE_WAR')},
+	{ key: '20', name: i18n.__('GENRE_SPORT')},
+	{ key: '21', name: i18n.__('GENRE_WESTERN')},
+	{ key: '22', name: i18n.__('GENRE_DOGMA')},
+	{ key: '23', name: i18n.__('GENRE_FILMNOIR')},
+	{ key: '24', name: i18n.__('GENRE_STANDUP')},
+	{ key: '25', name: i18n.__('GENRE_MYSTERY')},
+	{ key: '26', name: i18n.__('GENRE_BLACKCOMEDY')},
+	{ key: '27', name: i18n.__('GENRE_DRAMATICCOMEDY')},
+	{ key: '28', name: i18n.__('GENRE_SHORTFILM')}
 ];
 
 // Scrollbar config
@@ -79,23 +80,6 @@ if (!isDebug) {
     console.log = function () {};
 } else {
     function addDeveloperTools(win) {
-      // Developer Menu building
-      var menubar = new gui.Menu({ type: 'menubar' }),
-          developerSubmenu = new gui.Menu(),
-          developerItem = new gui.MenuItem({
-             label: 'Developer',
-             submenu: developerSubmenu
-          }),
-          debugItem = new gui.MenuItem({
-              label: 'Show developer tools',
-              click: function () {
-                  win.showDevTools();
-              }
-          });
-      menubar.append(developerItem);
-      developerSubmenu.append(debugItem);
-      win.menu = menubar;
-
       // Developer Shortcuts
       win.window.document.addEventListener('keydown', function(event){
           // F12 Opens DevTools
@@ -163,19 +147,14 @@ var Storm = function() {
 		// Toolbar in Windows
 		if (isWin) {
 			var toolbar = $('#toolbar');
-
-			toolbar.find('.min').click(function() {
-				win.minimize();
-			})
-			toolbar.find('.max').click(function() {
-				isMaximized ? win.unmaximize() : win.maximize();
-			})
-			toolbar.find('.close').click(function() {
-				win.close();
-			})
+			toolbar.find('.min').click(function() { win.minimize()	});
+			toolbar.find('.max').click(function() { isMaximized ? win.unmaximize() : win.maximize() });
+			toolbar.find('.close').click(function() { win.close() });
 			$('body').addClass('isWindows');
 		} else if (isMac) {
 			$('body').addClass('isMac');
+		} else if (isLinux) {
+			$('body').addClass('isLinux');
 		}
 
 		// Window height containers
@@ -394,7 +373,7 @@ var Storm = function() {
 		var he = $(window).height();
 		$('#menu, #main').height(he-$('#menu').offset().top);
 		$('#menu ul').height(he-$('#menu ul').offset().top);
-		$('#grid-container').height(he-$('#grid-container').offset().top).trigger('scroll');
+		$('#grid-container').height(he-$('#grid-container').offset().top);
 		$('.scrollbar').jScrollPane(scrollbarOptions);
 	}
 
@@ -553,10 +532,11 @@ var Storm = function() {
 		}
 
 		// OrderBy
+		var lastURL = t.lastURL;
 		t.topButtons.find('.orderby li:not(.default)').off('click').on('click', function(event) {
 			var $this = $(this);
 			t.setOrderBy($this.attr('data-type'),$this.hasClass('asc') ? 'desc' : 'asc');
-			t.loadView(t.lastURL.type, t.lastURL.action, null, t.lastURL.vars);
+			t.loadView(lastURL.type, lastURL.action, null, lastURL.vars);
 		});
 
 		var number = data.from;
@@ -625,6 +605,9 @@ var Storm = function() {
 
 		// if window.height es mayor al grid.height, sigue cargando más...
 		gridcontainer.trigger('jsp-scroll-y', [api.getContentPositionX()]);
+
+		// Also check on window resizing.
+		$(window).off('resize.infinite').on('resize.infinite', function() { gridcontainer.trigger('jsp-scroll-y', [api.getContentPositionX()]) });
 	}
 
 	// Load featured list
@@ -1124,22 +1107,7 @@ var Storm = function() {
 
     	var title = data.type=='movie' ? data.name+' ('+data.year+')' : data.tvshow.name+': '+data.name;
 
-    	if (/^magnet:/.test(source.url)) return t.loadTorrent(magnet(source.url), data, source, title);
-
-    	readTorrent(source.url, function(err, torrent) {
-			if (err) {
-				t.cancelLoadingVideo();
-    			t.popupAlert(i18n.__('INVALID_FILE'),i18n.__('TORRENT_NOT_LOADED'));
-    			return;
-			}
-
-			t.loadTorrent(torrent, data, source, title);
-		});
-    	
-    }
-
-    t.loadTorrent = function(torrent, data, source, title) {
-    	playTorrent(torrent, function(err, href) {
+    	playTorrent(source.url, function(err, href) {
     		if (err) {
     			t.cancelLoadingVideo();
     			t.popupAlert(i18n.__('INVALID_FILE'),i18n.__('TORRENT_NOT_LOADED'));
@@ -1204,8 +1172,8 @@ var Storm = function() {
     t.createPlayerWindow = function(title, videoData) {
     	var new_window = gui.Window.open('app://cuevana/app/views/player.html', {
     		title: title,
-    		frame: (!isDebug && isWin) ? false : true,
     		toolbar: false,
+    		frame: (isWin ? false : true),
 		    icon: "./app/assets/icons/512x512.png",
     		position: 'center',
     		width: 1280,

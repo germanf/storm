@@ -4,17 +4,29 @@ Cuevana app to watch movies with friends!
 
 Cuevana Storm desktop app based in peerflix module, packaged with node-webkit
 
-#### Build
-
-Install gulp dependencies: 
+#### Install
 
 `npm install`
 
-#### Codecs
+#### Run
 
-When building the app you'll need to use a version of ffmpegsumo that can play videos/audio correctly. Check out the url below:
+`npm start`
 
-https://github.com/rogerwang/node-webkit/wiki/Support-mp3-and-h264-in-video-and-audio-tag
+#### Build
+
+Use this to build the application executable.
+
+`npm run build` will build for your current platform.
+
+`npm run build-all` will build for all platforms.
+
+#### Developers
+
+`npm run compile` will compile less and update html references.
+
+`npm run watcher` will automatically watch for file changes and compile when needed.
+
+When the app is launched with `npm start`, it runs in `--debug` mode. Press `F11` to reload or `F12` to open Developers Tools (console).
 
 #### Comments
 

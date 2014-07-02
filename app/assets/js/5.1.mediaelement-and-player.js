@@ -2450,7 +2450,6 @@ if (typeof jQuery != 'undefined') {
 								}
 							}
 						});
-
 					} else {
 
 						// create callback here since it needs access to current
