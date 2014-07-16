@@ -13,28 +13,30 @@ TODO: Enable/Disable voice chat
 
 ##RoadMap:
 
-#V 0.2
+###V 0.2
 
 - Send data of movie instead of manually choosing each
 - Sync movie time every some time
 - Add notifications when somebody connected
 - Load movie torrent from file
 
-#V 0.3
+###V 0.3
 
 - Improve start sync
 
-#V 0.4
+###V 0.4
 
 - Sign-in using facebook (openpeer)
 
-#V 0.5
+###V 0.5
 
 - Add video capabilities
 
-#V 0.6
+###V 0.6
 
 - Multiple people syncing
+
+##Build/Run
 
 #### Build
 
@@ -60,6 +62,6 @@ or find the nw executables in build/Cuevana/your-os/
 
 When the app is launched with `npm start`, it runs in `--debug` mode. Press `F11` to reload or `F12` to open Developers Tools (console).
 
-#### Comments
+## Comments
 
 Inspired by Cuevana and Popcorn Time's use of peerflix module. Expanded on their idea.
