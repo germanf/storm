@@ -129,11 +129,11 @@ gulp.task('build', ['compile'], function(cb) {
 	// Initialize NodeWebkitBuilder
 	var nw = new NodeWebkitBuilder({
 		files: [ './package.json', './app/**/*' ].concat(modules),
-		version: '0.9.2',
+		version: '0.9.2-7',
 		cacheDir: './build/cache',
 		platforms: platforms,
 		macIcns: './app/assets/icons/mac.icns',
-		winIco: './app/assets/icons/windows.ico',
+//		winIco: './app/assets/icons/windows.ico',
 		checkVersions: false
 	})
 

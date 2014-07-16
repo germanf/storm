@@ -536,6 +536,20 @@ input {
 	display: none;
 }
 
+.peerbox input {
+    background: transparent;
+    border: 0;
+    line-height: 30px;
+    padding: 0 0 0 5px;
+    color: #777;
+    width: 90%;
+}
+
+
+#peerid {
+    color: yellow;
+}
+
 #detail-view {
 	width: 70%;
 	height: 100%;
@@ -553,6 +567,7 @@ input {
 	font-weight: 300;
 	line-height: 22px;
 	-webkit-transition: left 0.25s linear;
+    
 	&.closed {
 		left: -700px;
 	}
@@ -609,8 +624,21 @@ input {
 			border-color: @colorlight;
 		}
 	}
+    
 	.action_buttons {
 		margin: 0 15px;
+        span {
+            &.peerbox {
+                color: #777;
+                padding: 6px 0px;
+                -webkit-transition: all 0.2s;
+                font-size: 14px;
+                background-color: #fff;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                position: relative;
+                z-index: 3;
+            }
+        }
 		li {
 			height: 3em;
 			line-height: 3;
@@ -623,6 +651,31 @@ input {
 			&:hover {
 				background-color: #378b46;
 			}
+            &.peerbox-half {
+                height: 2.4em;
+                line-height: 2.4;
+                width: 50%;
+                float: left;
+                background: transparent;
+                &:hover {
+                    height: 2.4em;
+                    line-height: 2.4;
+                    width: 50%;
+                    float: left;
+                    background: transparent;
+                }
+            }
+            &.play-share {
+                height: 2.4em;
+                line-height: 2.4;
+                width: 50%;
+                float: left;
+                background-color: #59a7e4;
+                color: rgba(255, 255, 255, 0.8);
+                &:hover {
+                    background-color: #4997d4;
+                }
+            }
 			&.half {
 				text-align: left;
 				height: 2.4em;
@@ -673,6 +726,11 @@ input {
 			
 		}
 	}
+
+    .low-margin {
+        margin-bottom:5px;
+    }
+
 	.close_button {
 		float: right;
 		cursor: pointer;

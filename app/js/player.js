@@ -94,6 +94,7 @@ var Player = function() {
 			features: ['playpause','current','progress','duration','fullscreen','volume','tracks','videofit','torrentinfo','fontawesome', 'customtracks'],
 			success : function(mediaElement, domObject, player) {
         		t.mePlayer = player;
+        		t.meMediaElement = mediaElement;
         		// TODO: Move me into a mediaelement plugin?
 				player.container.bind('controlsshown', function() {
 					player.container.css('cursor', 'auto')

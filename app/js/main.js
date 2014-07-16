@@ -69,6 +69,12 @@ var scrollbarOptions = {
 	mouseWheelSpeed: isWin ? 30 : 3
 }
 
+// Obtain PeerId
+var peer = new Peer({key: 'lwjd5qra8257b9'});
+var conn = null
+var player_window_global = null;
+//TODO: get PeerId app
+
 // Create tmp dir
 var tmpDir = path.join(os.tmpDir(), 'Cuevana Storm');
 if(!fs.existsSync(tmpDir)) { fs.mkdirSync(tmpDir); }
@@ -136,6 +142,9 @@ var Storm = function() {
 	t.dview = $('#detail-view'),
 	t.darkAll = $('#dark-bg'),
 	t.darkMain = $('#dark-main'),
+
+    // Peer Video
+    t.waiting_video = false;
 
 	t.init = function() {
 		// Delete cache on startup (dev mode)
@@ -205,6 +214,16 @@ var Storm = function() {
 
 		// Load default view / First menu item
 		menuli.eq(0).trigger('click');
+
+        // Get PeerID
+
+        $('#peerid').html("You have no PeerID assigned yet. Trying to collect one...")
+
+        peer.on('open', function(id) {
+            
+            $('#peerid').html(id)
+
+        });
 
 		// Search list
 		$('#q').on('keyup', $.throttle(
@@ -876,6 +895,87 @@ var Storm = function() {
 				t.dview.find('.play-button').off('click.play').on('click.play', function() {
 					t.loadVideo(data);
 				});
+                
+                // Callback functions for Peer communication
+                t.peerCallbacks = function(received_data) {
+                    console.log('Received: ' + received_data);
+                    var value_data = received_data.split(":");
+                    if (value_data[0] == "action-start") {
+                        t.loadVideo(data);
+                    } else if (value_data[0] == "sync-start") {
+                        t.waiting_video = true;
+                    } else if (value_data[0] == "sync-start-now") {
+                        if (player_window_global != null) {
+                            console.log("Playing...")
+                            player_window_global.mePlayer.play();
+                            t.waiting_video = false;
+                        }
+                    } else if (value_data[0] == "action-pause") {
+                        var time = value_data[1];
+                        if (player_window_global != null) {
+                            player_window_global.mePlayer.pause();
+                            player_window_global.mePlayer.setCurrentTime(time);
+                        }
+                    } else if (value_data[0] == "action-play") {
+                        var time = value_data[1];
+                        if (player_window_global != null) {
+                            player_window_global.mePlayer.play();
+                            //TODO: fails player_window_global.mePlayer.setCurrentTime(time);
+                        }
+                    }
+                }
+
+                // Get navigator media
+                navigator.webkitGetUserMedia({audio:true}, 
+                    function(localMediaStream){
+                        console.log('Voice recording started');
+                        t.localStream = localMediaStream;
+                    },
+                    function(err){
+                        console.log('Voice recording error');
+                    }
+                );
+
+                
+                // Play PeerJS share button
+                t.dview.find('.play-share').on('click', function() {
+                    
+                    var peer_connect = t.dview.find('#peerid_friend').val();
+
+                    // Start voicechat
+                    var call = peer.call(peer_connect, t.localStream);
+                    call.on('stream', function(stream){
+                        $('#voice-chat').prop('src', URL.createObjectURL(stream));
+                    });
+
+                    console.log('Voice chat started');
+
+                    conn = peer.connect(peer_connect);
+                    conn.on('data', t.peerCallbacks);
+                    conn.on('open', function() {
+                        conn.send("action-start");
+                        console.log('Connected to peer');
+                        t.loadVideo(data);
+                    });
+                });
+                
+                peer.on('connection', function(conn_accepted) { 
+                    
+                    conn = conn_accepted;
+                    console.log('Connection accepted');
+                    conn_accepted.on('data', t.peerCallbacks);
+                    
+                });
+
+                peer.on('call', function(call) {
+                    // Answer the call, providing our mediaStream
+                    console.log('Voice chat started');
+                    call.answer(t.localStream);
+                    call.on('stream', function(stream){
+                        $('#voice-chat').prop('src', URL.createObjectURL(stream));
+                    });
+                });
+
 				t.dview.find('.separator').eq(0).hide();
 			} else {
 				t.dview.find('.action_buttons').hide()
@@ -1144,6 +1244,7 @@ var Storm = function() {
 
     // Play video
     t.playVideo = function(href, subtitles, source, title) {
+        
     	// Set vars
     	var videoData = {
     		title: title,
@@ -1189,6 +1290,32 @@ var Storm = function() {
     		new_window.window.videoData = videoData;
     		new_window.window.mainWindow = win;
     		new_window.window.player = new new_window.window.Player();
+            player_window_global = new_window.window.player;
+    
+            // Media listeners to use with Peer JS
+            if (conn!=null) {
+                player_window_global.meMediaElement.addEventListener('pause', function(e) {
+                    var time =  player_window_global.meMediaElement.currentTime;
+                    conn.send("action-pause:" + time);
+                }, false);
+                player_window_global.meMediaElement.addEventListener('play', function(e) {
+                    var time =  player_window_global.meMediaElement.currentTime;
+                    conn.send("action-play:" + time);
+                }, false);
+            }
+
+            // Peer sync start  
+            if (conn != null) {
+                if (t.waiting_video) {
+                    console.log("Playing...")
+                    t.waiting_video = false;
+                    conn.send("sync-start-now");
+                } else {
+                    console.log('Waiting for syncing...');
+                    player_window_global.mePlayer.pause();
+                    conn.send("sync-start");
+                }
+            }
     	})
 
     	windows.push(new_window);

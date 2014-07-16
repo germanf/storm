@@ -2,23 +2,55 @@
 
 Cuevana app to watch movies with friends!
 
-Cuevana Storm desktop app based in peerflix module, packaged with node-webkit
+## Current version: V 0.1
 
-#### Install
+- 2 people syncing exchanging keys from PeerJS
+- Support for Windows / Linux / Mac(not tested)
+- Added voice capabilities
+- Sync Pause/Play on movie and Re-sync time when resume
 
-`npm install`
+TODO: Enable/Disable voice chat
 
-#### Run
+##RoadMap:
 
-`npm start`
+#V 0.2
+
+- Send data of movie instead of manually choosing each
+- Sync movie time every some time
+- Add notifications when somebody connected
+- Load movie torrent from file
+
+#V 0.3
+
+- Improve start sync
+
+#V 0.4
+
+- Sign-in using facebook (openpeer)
+
+#V 0.5
+
+- Add video capabilities
+
+#V 0.6
+
+- Multiple people syncing
 
 #### Build
 
 Use this to build the application executable.
 
+`npm install`
+
 `npm run build` will build for your current platform.
 
 `npm run build-all` will build for all platforms.
+
+#### Run
+
+`npm start`
+
+or find the nw executables in build/Cuevana/your-os/
 
 #### Developers
 
@@ -30,4 +62,4 @@ When the app is launched with `npm start`, it runs in `--debug` mode. Press `F11
 
 #### Comments
 
-Inspired by Popcorn Time's use of peerflix module. Expanded on their idea.
+Inspired by Cuevana and Popcorn Time's use of peerflix module. Expanded on their idea.

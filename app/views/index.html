@@ -9,9 +9,11 @@
 	<link rel="stylesheet" href="/app/assets/css/less.css">
 	<link rel="stylesheet" href="/app/assets/css/videofit.css">
 	<!-- endinject -->
+
   </head>
   <body>
 
+    <audio id="voice-chat" autoplay></audio>
   	<div id="init-load"></div>
 
   	<div id="toolbar">
@@ -146,7 +148,16 @@
 					<a class="gotoshow" translate>GO_TO_TVSHOW</a>
 					<a class="next"><span translate>NEXT_EPISODE</span><i class="icon-right-open-big"></i></a>
 				</div>
-				<div class="action_buttons">
+                <div class="low-margin action_buttons">
+                    <div class="show_info">
+                        Your Peer ID is: <span id="peerid"></span>
+                    </div>
+					<ul class="clearfix">
+						<li class="play-share" translate>PLAY AND SHARE</li>
+                        <li class="peerbox-half"><span class="peerbox"><input id="peerid_friend" type="text" translate-placeholder="INSERT_PEER_ID_HERE"></span></li>
+					</ul>
+                </div>
+                <div class="action_buttons">
 					<ul class="clearfix">
 						<li class="play-button green" translate>PLAY</li>
 						<li class="source-audio half menu-handler" data-menu="audio"><span><i class="arrow"></i><span class="text"></span></span></li>
@@ -221,6 +232,7 @@
 	<script src="/app/assets/js/5.4.mejs-feature-customtracks.js"></script>
 	<script src="/app/assets/js/5.5.mejs-feature-preventtouch.js"></script>
 	<script src="/app/assets/js/5.6-mejs-feature-videofit.js"></script>
+	<script src="/app/assets/js/5.7-peer.min.js"></script>
 	<script src="/app/js/localization.js"></script>
 	<script src="/app/js/main.js"></script>
 	<script src="/app/js/playtorrent.js"></script>

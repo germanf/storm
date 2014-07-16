@@ -2660,6 +2660,17 @@ input {
   z-index: 200;
   display: none;
 }
+.peerbox input {
+  background: transparent;
+  border: 0;
+  line-height: 30px;
+  padding: 0 0 0 5px;
+  color: #777;
+  width: 90%;
+}
+#peerid {
+  color: yellow;
+}
 #detail-view {
   width: 70%;
   height: 100%;
@@ -2737,6 +2748,16 @@ input {
 #detail-view .action_buttons {
   margin: 0 15px;
 }
+#detail-view .action_buttons span.peerbox {
+  color: #777;
+  padding: 6px 0px;
+  -webkit-transition: all 0.2s;
+  font-size: 14px;
+  background-color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 3;
+}
 #detail-view .action_buttons li {
   height: 3em;
   line-height: 3;
@@ -2749,6 +2770,31 @@ input {
 }
 #detail-view .action_buttons li:hover {
   background-color: #378b46;
+}
+#detail-view .action_buttons li.peerbox-half {
+  height: 2.4em;
+  line-height: 2.4;
+  width: 50%;
+  float: left;
+  background: transparent;
+}
+#detail-view .action_buttons li.peerbox-half:hover {
+  height: 2.4em;
+  line-height: 2.4;
+  width: 50%;
+  float: left;
+  background: transparent;
+}
+#detail-view .action_buttons li.play-share {
+  height: 2.4em;
+  line-height: 2.4;
+  width: 50%;
+  float: left;
+  background-color: #59a7e4;
+  color: rgba(255, 255, 255, 0.8);
+}
+#detail-view .action_buttons li.play-share:hover {
+  background-color: #4997d4;
 }
 #detail-view .action_buttons li.half {
   text-align: left;
@@ -2793,6 +2839,9 @@ input {
 }
 #detail-view .action_buttons .menu-drop {
   display: none;
+}
+#detail-view .low-margin {
+  margin-bottom: 5px;
 }
 #detail-view .close_button {
   float: right;
