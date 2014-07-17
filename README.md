@@ -8,8 +8,7 @@ Cuevana app to watch movies with friends!
 - Support for Windows / Linux / Mac(not tested)
 - Added voice capabilities
 - Sync Pause/Play on movie and Re-sync time when resume
-
-TODO: Enable/Disable voice chat
+- Enable/Disable voice chat using keyboard key 'V'
 
 ##RoadMap:
 

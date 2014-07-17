@@ -22,6 +22,7 @@ var isWin = /^win/.test(process.platform);
 var isMac = /^darwin/.test(process.platform);
 var isLinux = (!isWin && !isMac);
 var isMaximized = false;
+var voiceOn = false;
 
 // App extra variables
 var videoData = {};
@@ -70,10 +71,9 @@ var scrollbarOptions = {
 }
 
 // Obtain PeerId
-var peer = new Peer({key: 'lwjd5qra8257b9'});
+var peer = new Peer({key: 'jj56v7tw18vbzkt9'});
 var conn = null
 var player_window_global = null;
-//TODO: get PeerId app
 
 // Create tmp dir
 var tmpDir = path.join(os.tmpDir(), 'Cuevana Storm');
@@ -941,15 +941,7 @@ var Storm = function() {
                 t.dview.find('.play-share').on('click', function() {
                     
                     var peer_connect = t.dview.find('#peerid_friend').val();
-
-                    // Start voicechat
-                    var call = peer.call(peer_connect, t.localStream);
-                    call.on('stream', function(stream){
-                        $('#voice-chat').prop('src', URL.createObjectURL(stream));
-                    });
-
-                    console.log('Voice chat started');
-
+                    t.peer_connect = peer_connect;
                     conn = peer.connect(peer_connect);
                     conn.on('data', t.peerCallbacks);
                     conn.on('open', function() {
@@ -962,18 +954,31 @@ var Storm = function() {
                 peer.on('connection', function(conn_accepted) { 
                     
                     conn = conn_accepted;
+                    t.peer_connect = conn.peer;
                     console.log('Connection accepted');
                     conn_accepted.on('data', t.peerCallbacks);
                     
                 });
 
-                peer.on('call', function(call) {
+                peer.on('call', function(peerCall) {
                     // Answer the call, providing our mediaStream
                     console.log('Voice chat started');
-                    call.answer(t.localStream);
-                    call.on('stream', function(stream){
-                        $('#voice-chat').prop('src', URL.createObjectURL(stream));
-                    });
+                    if (!voiceOn) {
+                        voiceOn = true;
+                        t.call = peerCall;
+                        t.call.answer(t.localStream);
+                        t.call.on('stream', function(stream){
+                            console.log("Streaming voice...");
+                            $('#voice-chat').prop('src', URL.createObjectURL(stream));
+                        });
+                        t.call.on('error', function(stream){
+                            console.log('Cannot share voice');
+                        });
+                        t.call.on('close', function(stream){
+                            voiceOn = false;
+                            console.log('Voice is now off');
+                        });
+                    }
                 });
 
 				t.dview.find('.separator').eq(0).hide();
@@ -995,6 +1000,37 @@ var Storm = function() {
 	    			t.closeItemView();
 	    			$(document).off('.renderitem');
 	    		}
+	    		if (e.keyCode == 86) {
+                    
+                    // Start voicechat
+                    if (voiceOn) {
+                        
+                        if (typeof(t.call) != 'undefined' && t.call != null) {
+                            console.log("Voice is now off");
+                            t.call.close();
+                            voiceOn = false;
+                        }
+
+                    } else {
+                        
+                        t.call = peer.call(t.peer_connect, t.localStream);
+                        console.log("Sharing voice with " + t.peer_connect);
+                        t.call.on('stream', function(stream){
+                            console.log("Streaming voice...");
+                            $('#voice-chat').prop('src', URL.createObjectURL(stream));
+                            console.log("Voice is now on");
+                            voiceOn = true;
+                        });
+                        t.call.on('error', function(stream){
+                            console.log('Cannot share voice');
+                        });
+                        t.call.on('close', function(stream){
+                            voiceOn = false;
+                            console.log('Voice is now off');
+                        });
+                    }
+                }
+
 	    	})
 			t.darkMain.on('click.renderitem', function() {
 				t.closeItemView();
